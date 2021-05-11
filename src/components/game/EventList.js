@@ -1,14 +1,18 @@
 import React, { useContext, useEffect } from "react"
 import { useHistory } from "react-router"
 import { EventContext } from "./EventProvider.js"
+// import "./Events.css"
 
 export const EventList = (props) => {
-    const { events, getEvents } = useContext(EventContext)
-
+    const { events, getEvents, joinEvent, leaveEvent } = useContext(EventContext)
+    
     useEffect(() => {
         getEvents()
     }, [])
+
     const history = useHistory()
+    
+
     return (
         <article className="events">
             <header className="events__header">
@@ -21,6 +25,8 @@ export const EventList = (props) => {
             </header>
             {
                 events.map(event => {
+                    console.log('event: ', event);
+                    // const attending = events.some(evt => evt.id === event.id)
                     return <section key={event.id} className="registration">
                         <div className="registration__game">{event.game.title}</div>
                         <div>{event.description}</div>
@@ -36,6 +42,15 @@ export const EventList = (props) => {
                             }
                             @ {event.time}
                         </div>
+                        {
+                            event.joined
+                            ? <button className="btn btn-3"
+                            onClick={() => leaveEvent(event.id)}
+                            >Leave</button>
+                            : <button className="btn btn-2"
+                            onClick={() => joinEvent(event.id)}
+                            >Join</button>
+                        }
                     </section>
                 })
             }
