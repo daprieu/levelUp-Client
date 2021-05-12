@@ -1,13 +1,16 @@
 import React, { useContext, useState, useEffect } from "react"
 import { GameContext } from "./GameProvider.js"
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 
 export const GameForm = () => {
     const history = useHistory()
-    const { createGame, getGameTypes, gameTypes } = useContext(GameContext)
-    console.log('gameTypes: ', gameTypes);
-    // console.log('getGameTypes: ', getGameTypes);
+    const { createGame, getGameTypes, gameTypes, editGame, getGame, games } = useContext(GameContext)
+    console.log('games: ', games);
+    // console.log('getGame: ', getGame);
+    const gameId = useParams()
+    const pGameId = parseInt(gameId.gameId)
+    console.log('pGameId: ', pGameId);
 
     /*
         Since the input fields are bound to the values of
@@ -22,13 +25,33 @@ export const GameForm = () => {
         gameType: 0
     })
     console.log('currentGame: ', currentGame);
-
+    useEffect(() => {
+        if (gameId) {
+            getGame(pGameId)
+            .then(game => {
+                setCurrentGame({
+                    skillLevel: game?.skill_level,
+                    numberOfPlayers: game?.number_of_players,
+                    title: game.title,
+                    maker: game.maker,
+                    gameType: game.game_type?.id
+                })
+            })
+            }
+        
+    }, [gameId])
     /*
         Get game types on initialization so that the <select>
         element presents game type choices to the user.
     */
     useEffect(() => {
         getGameTypes()
+        // if (gameId) {
+        //     getGames(parseInt(gameId.gameId))
+        //     .then(game => {
+        //         setCurrentGame(game)
+        //     })
+        // }
     }, [])
 
     /*
@@ -64,7 +87,7 @@ export const GameForm = () => {
                 <div className="form-group">
                     <label htmlFor="maker">Maker: </label>
                     <input type="text" name="maker" required autoFocus className="form-control"
-                        value={currentGame.maker}
+                        value={currentGame?.maker}
                         onChange={changeStateHandler}
                     />
                 </div>
@@ -73,7 +96,7 @@ export const GameForm = () => {
                 <div className="form-group">
                     <label htmlFor="skillLevel">Skill Level: </label>
                     <input type="text" name="skillLevel" required autoFocus className="form-control"
-                        value={currentGame.skillLevel}
+                        value={currentGame?.skillLevel}
                         onChange={changeStateHandler}
                     />
                 </div>
@@ -82,7 +105,7 @@ export const GameForm = () => {
                 <div className="form-group">
                     <label htmlFor="numberOfPlayers">Number Of Players: </label>
                     <input type="text" name="numberOfPlayers" required autoFocus className="form-control"
-                        value={currentGame.numberOfPlayers}
+                        value={currentGame?.numberOfPlayers}
                         onChange={changeStateHandler}
                     />
                 </div>
@@ -91,7 +114,7 @@ export const GameForm = () => {
                 <div className="form-group">
                     <label htmlFor="gameType">Game Type: </label>
                     <select type="text" name="gameType" required autoFocus className="form-control"
-                        value={currentGame.gameType}
+                        value={currentGame?.gameType}
                         onChange={changeStateHandler}>
                     <option value="0">Select a game type</option>
                     {gameTypes.map(gt => (
@@ -104,25 +127,44 @@ export const GameForm = () => {
             </fieldset>
 
             {/* You create the rest of the input fields for each game property */}
-
-            <button type="submit"
+            {
+                (pGameId) ?
+                <button type="submit"
                 onClick={evt => {
                     // Prevent form from being submitted
                     evt.preventDefault()
-
-                    const game = {
+                    editGame({
+                        id: currentGame.pGameId,
                         maker: currentGame.maker,
                         title: currentGame.title,
                         numberOfPlayers: parseInt(currentGame.numberOfPlayers),
                         skillLevel: parseInt(currentGame.skillLevel),
                         gameType: parseInt(currentGame.gameType)
-                    }
-
+                    })
                     // Send POST request to your API
-                    createGame(game)
                         .then(() => history.push("/games"))
                 }}
-                className="btn btn-primary">Create</button>
+                className="btn btn-primary">Confirm Edit</button> 
+                :
+                <button type="submit"
+                    onClick={evt => {
+                        // Prevent form from being submitted
+                        evt.preventDefault()
+    
+                        const game = {
+                            maker: currentGame.maker,
+                            title: currentGame.title,
+                            numberOfPlayers: parseInt(currentGame.numberOfPlayers),
+                            skillLevel: parseInt(currentGame.skillLevel),
+                            gameType: parseInt(currentGame.gameType)
+                        }
+                        // Send POST request to your API
+                        createGame(game)
+                            .then(() => history.push("/games"))
+                    }}
+                    className="btn btn-primary">Create</button>
+
+            }
         </form>
     )
 }
