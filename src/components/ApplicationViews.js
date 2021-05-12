@@ -1,5 +1,7 @@
 import React from "react"
 import { Route } from "react-router-dom"
+import { Profile } from "./auth/Profile.js"
+import { ProfileProvider } from "./auth/ProfileProvider.js"
 import { EventForm } from "./game/EventForm.js"
 import { EventList } from "./game/EventList.js"
 import { EventProvider } from "./game/EventProvider.js"
@@ -29,6 +31,11 @@ export const ApplicationViews = () => {
                 </Route>
                 </EventProvider>
             </GameProvider>
+            <ProfileProvider>
+                <Route exact path="/profile">
+                    <Profile />
+                </Route>
+            </ProfileProvider>
         </main>
     </>
 }
