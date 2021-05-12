@@ -15,12 +15,13 @@ export const GameForm = () => {
         provide some default values.
     */
     const [currentGame, setCurrentGame] = useState({
-        skill_level: 1,
-        number_of_players: 0,
+        skillLevel: 1,
+        numberOfPlayers: 0,
         title: "",
         maker: "",
-        game_type: 0
+        gameType: 0
     })
+    console.log('currentGame: ', currentGame);
 
     /*
         Get game types on initialization so that the <select>
@@ -70,27 +71,27 @@ export const GameForm = () => {
             </fieldset>
             <fieldset>
                 <div className="form-group">
-                    <label htmlFor="skill_level">Skill Level: </label>
-                    <input type="text" name="skill_level" required autoFocus className="form-control"
-                        value={currentGame.skill_level}
+                    <label htmlFor="skillLevel">Skill Level: </label>
+                    <input type="text" name="skillLevel" required autoFocus className="form-control"
+                        value={currentGame.skillLevel}
                         onChange={changeStateHandler}
                     />
                 </div>
             </fieldset>
             <fieldset>
                 <div className="form-group">
-                    <label htmlFor="number_of_players">Number Of Players: </label>
-                    <input type="text" name="number_of_players" required autoFocus className="form-control"
-                        value={currentGame.number_of_players}
+                    <label htmlFor="numberOfPlayers">Number Of Players: </label>
+                    <input type="text" name="numberOfPlayers" required autoFocus className="form-control"
+                        value={currentGame.numberOfPlayers}
                         onChange={changeStateHandler}
                     />
                 </div>
             </fieldset>
             <fieldset>
                 <div className="form-group">
-                    <label htmlFor="game_type">Game Type: </label>
-                    <select type="text" name="game_type" required autoFocus className="form-control"
-                        value={currentGame.game_type}
+                    <label htmlFor="gameType">Game Type: </label>
+                    <select type="text" name="gameType" required autoFocus className="form-control"
+                        value={currentGame.gameType}
                         onChange={changeStateHandler}>
                     <option value="0">Select a game type</option>
                     {gameTypes.map(gt => (
@@ -112,9 +113,9 @@ export const GameForm = () => {
                     const game = {
                         maker: currentGame.maker,
                         title: currentGame.title,
-                        number_of_players: parseInt(currentGame.number_of_players),
-                        skill_level: parseInt(currentGame.skill_level),
-                        game_type: parseInt(currentGame.game_type)
+                        numberOfPlayers: parseInt(currentGame.numberOfPlayers),
+                        skillLevel: parseInt(currentGame.skillLevel),
+                        gameType: parseInt(currentGame.gameType)
                     }
 
                     // Send POST request to your API
